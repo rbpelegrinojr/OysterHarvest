@@ -24,28 +24,26 @@ function initializeMap() {
             let centerLng = 120.9842;
             
             if (response.success && response.settings) {
-                centerLat = parseFloat(response.settings.map_center_latitude) || centerLat;
-                centerLng = parseFloat(response.settings.map_center_longitude) || centerLng;
+                // Use explicit null/undefined checks to allow 0 as valid coordinate
+                if (response.settings.map_center_latitude !== null && response.settings.map_center_latitude !== undefined) {
+                    centerLat = parseFloat(response.settings.map_center_latitude);
+                }
+                if (response.settings.map_center_longitude !== null && response.settings.map_center_longitude !== undefined) {
+                    centerLng = parseFloat(response.settings.map_center_longitude);
+                }
             }
             
             // Create map centered on configured coordinates
             map = L.map('map').setView([centerLat, centerLng], 13);
 
-            // Add satellite tile layer with labels (using ESRI World Imagery + OpenStreetMap labels)
+            // Add satellite tile layer with labels (using ESRI World Imagery)
             // Base satellite layer
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
                 maxZoom: 19
             }).addTo(map);
 
-            // Overlay with labels
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                maxZoom: 19,
-                opacity: 0 // Make the base map transparent, only showing labels
-            }).addTo(map);
-
-            // Alternative: Use labels overlay from CartoDB
+            // Overlay with labels from CartoDB
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>',
                 maxZoom: 19,
