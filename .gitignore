@@ -1,0 +1,43 @@
+# Oyster Harvest Management System
+# Ignore sensitive and environment-specific files
+
+# Configuration files with credentials
+config/database.php
+
+# PHP temporary files
+*.log
+*.tmp
+*.cache
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Uploaded files (if any)
+uploads/
+temp/
+
+# Environment files
+.env
+.env.local
+
+# Composer dependencies (if used)
+vendor/
+composer.lock
+
+# Node modules (if used)
+node_modules/
+package-lock.json
+
+# System files
+.htaccess
+error_log
