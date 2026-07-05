@@ -277,7 +277,7 @@ function getStatusBadgeClass($status) {
 function getStatusColor($status) {
     switch ($status) {
         case 'Active':
-            return '#0d6efd'; // Blue
+            return '#91DDF2'; // New theme color
         case 'Ready for Harvest':
             return '#fd7e14'; // Orange
         case 'Harvested':
