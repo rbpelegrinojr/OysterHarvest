@@ -36,19 +36,40 @@ function initializeMap() {
             // Create map centered on configured coordinates
             map = L.map('map').setView([centerLat, centerLng], 13);
 
-            // Add satellite tile layer with labels (using ESRI World Imagery)
-            // Base satellite layer
-            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            // Define base layers
+            const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 19
+            });
+
+            const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
                 maxZoom: 19
-            }).addTo(map);
+            });
 
-            // Overlay with labels from CartoDB
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>',
-                maxZoom: 19,
-                pane: 'shadowPane'
-            }).addTo(map);
+            const hybridLayer = L.layerGroup([
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri',
+                    maxZoom: 19
+                }),
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                    maxZoom: 19,
+                    pane: 'shadowPane'
+                })
+            ]);
+
+            // Add default layer (OpenStreetMap for localhost compatibility)
+            osmLayer.addTo(map);
+
+            // Add layer control for switching between map types
+            const baseLayers = {
+                "Street Map": osmLayer,
+                "Satellite": satelliteLayer,
+                "Hybrid (Satellite + Labels)": hybridLayer
+            };
+
+            L.control.layers(baseLayers).addTo(map);
 
             // Initialize FeatureGroup to store drawn items
             drawnItems = new L.FeatureGroup();
@@ -138,17 +159,40 @@ function initializeMapWithDefaults() {
     // Create map centered on Manila Bay (Philippines) as fallback
     map = L.map('map').setView([14.5995, 120.9842], 13);
 
-    // Add satellite tile layer with labels
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    // Define base layers
+    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19
+    });
+
+    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
         maxZoom: 19
-    }).addTo(map);
+    });
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        maxZoom: 19,
-        pane: 'shadowPane'
-    }).addTo(map);
+    const hybridLayer = L.layerGroup([
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri',
+            maxZoom: 19
+        }),
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            maxZoom: 19,
+            pane: 'shadowPane'
+        })
+    ]);
+
+    // Add default layer (OpenStreetMap for localhost compatibility)
+    osmLayer.addTo(map);
+
+    // Add layer control for switching between map types
+    const baseLayers = {
+        "Street Map": osmLayer,
+        "Satellite": satelliteLayer,
+        "Hybrid (Satellite + Labels)": hybridLayer
+    };
+
+    L.control.layers(baseLayers).addTo(map);
 
     // Initialize FeatureGroup to store drawn items
     drawnItems = new L.FeatureGroup();
