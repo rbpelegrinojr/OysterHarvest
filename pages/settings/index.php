@@ -23,15 +23,23 @@ $messageType = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveSettings'])) {
     $averageHarvestMonths = isset($_POST['averageHarvestMonths']) ? (int)$_POST['averageHarvestMonths'] : 2;
+    $mapCenterLatitude = isset($_POST['mapCenterLatitude']) ? (float)$_POST['mapCenterLatitude'] : 14.5995;
+    $mapCenterLongitude = isset($_POST['mapCenterLongitude']) ? (float)$_POST['mapCenterLongitude'] : 120.9842;
     
     if ($averageHarvestMonths < 1) {
         $message = 'Average harvest duration must be at least 1 month.';
         $messageType = 'danger';
+    } elseif ($mapCenterLatitude < -90 || $mapCenterLatitude > 90) {
+        $message = 'Latitude must be between -90 and 90.';
+        $messageType = 'danger';
+    } elseif ($mapCenterLongitude < -180 || $mapCenterLongitude > 180) {
+        $message = 'Longitude must be between -180 and 180.';
+        $messageType = 'danger';
     } else {
         // Update settings
-        $updateQuery = "UPDATE settings SET average_harvest_months = ? WHERE id = 1";
+        $updateQuery = "UPDATE settings SET average_harvest_months = ?, map_center_latitude = ?, map_center_longitude = ? WHERE id = 1";
         $stmt = $conn->prepare($updateQuery);
-        $stmt->bind_param('i', $averageHarvestMonths);
+        $stmt->bind_param('idd', $averageHarvestMonths, $mapCenterLatitude, $mapCenterLongitude);
         
         if ($stmt->execute()) {
             $message = 'Settings saved successfully!';
@@ -47,10 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveSettings'])) {
 
 // Get current settings
 $currentSettings = [
-    'average_harvest_months' => 2
+    'average_harvest_months' => 2,
+    'map_center_latitude' => 14.5995,
+    'map_center_longitude' => 120.9842
 ];
 
-$query = "SELECT average_harvest_months FROM settings ORDER BY id DESC LIMIT 1";
+$query = "SELECT average_harvest_months, map_center_latitude, map_center_longitude FROM settings ORDER BY id DESC LIMIT 1";
 $result = $conn->query($query);
 
 if ($result && $result->num_rows > 0) {
@@ -105,6 +115,42 @@ include __DIR__ . '/../../includes/header.php';
                             </div>
                         </div>
 
+                        <div class="mb-4">
+                            <label for="mapCenterLatitude" class="form-label">
+                                Map Center Latitude
+                            </label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="mapCenterLatitude" 
+                                   name="mapCenterLatitude" 
+                                   value="<?php echo $currentSettings['map_center_latitude']; ?>" 
+                                   step="0.00000001"
+                                   min="-90"
+                                   max="90"
+                                   required>
+                            <div class="form-text">
+                                The latitude coordinate where the map will be centered (between -90 and 90).
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="mapCenterLongitude" class="form-label">
+                                Map Center Longitude
+                            </label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="mapCenterLongitude" 
+                                   name="mapCenterLongitude" 
+                                   value="<?php echo $currentSettings['map_center_longitude']; ?>" 
+                                   step="0.00000001"
+                                   min="-180"
+                                   max="180"
+                                   required>
+                            <div class="form-text">
+                                The longitude coordinate where the map will be centered (between -180 and 180).
+                            </div>
+                        </div>
+
                         <div class="alert alert-info">
                             <i class="bi bi-info-circle"></i> 
                             <strong>Note:</strong> Changing this value will only affect newly created areas and edited areas. 
@@ -134,6 +180,12 @@ include __DIR__ . '/../../includes/header.php';
                         The average harvest duration defines how long it typically takes for oysters to mature 
                         from planting to harvest. This setting helps the system automatically calculate when 
                         areas will be ready for harvesting.
+                    </p>
+                    
+                    <h6 class="mt-3">Map Center Coordinates</h6>
+                    <p class="small text-muted">
+                        Set the default center point of the map by providing latitude and longitude coordinates.
+                        This determines where the map will be focused when you first load the dashboard.
                     </p>
                     
                     <h6 class="mt-3">Automatic Calculations</h6>

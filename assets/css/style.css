@@ -2,6 +2,83 @@
  * Main Stylesheet for Oyster Harvest Management System
  */
 
+/* Bootstrap Theme Color Override */
+.bg-primary {
+    background-color: #91DDF2 !important;
+}
+
+.text-bg-primary {
+    background-color: #91DDF2 !important;
+}
+
+.btn-primary {
+    background-color: #91DDF2;
+    border-color: #91DDF2;
+    color: #000;
+}
+
+.btn-primary:hover {
+    background-color: #7AD0EC;
+    border-color: #7AD0EC;
+    color: #000;
+}
+
+.btn-primary:active,
+.btn-primary:focus {
+    background-color: #63C3E6;
+    border-color: #63C3E6;
+    color: #000;
+}
+
+/* Navbar adjustments for light theme color */
+.navbar.bg-primary {
+    background-color: #91DDF2 !important;
+}
+
+.navbar-dark .navbar-brand,
+.navbar-dark .navbar-nav .nav-link {
+    color: #000 !important;
+}
+
+.navbar-dark .navbar-toggler {
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.navbar-dark .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.navbar-dark .navbar-nav .nav-link.active {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Card header with primary background */
+.card-header.bg-primary,
+.card-header.bg-primary h5,
+.card-header.bg-primary .card-title {
+    color: #000 !important;
+}
+
+/* Statistics cards with bg-primary */
+.card.text-white.bg-primary {
+    background-color: #91DDF2 !important;
+    color: #000 !important;
+}
+
+.card.text-white.bg-primary .card-title,
+.card.text-white.bg-primary h2,
+.card.text-white.bg-primary h6 {
+    color: #000 !important;
+}
+
+.card.text-white.bg-primary i {
+    color: rgba(0, 0, 0, 0.5) !important;
+}
+
 /* General Styles */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -100,6 +177,11 @@ body {
     padding: 0.375rem 0.75rem;
 }
 
+.badge.bg-primary {
+    background-color: #91DDF2 !important;
+    color: #000 !important;
+}
+
 /* Alerts */
 .alert {
     border: none;
@@ -166,8 +248,8 @@ body {
 
 .form-control:focus,
 .form-select:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    border-color: #91DDF2;
+    box-shadow: 0 0 0 0.25rem rgba(145, 221, 242, 0.25);
 }
 
 /* Modal */
@@ -229,7 +311,7 @@ body {
 
 /* Status Colors */
 .status-active {
-    color: #0d6efd;
+    color: #91DDF2;
 }
 
 .status-ready {

@@ -17,6 +17,8 @@ USE oyster_harvest_db;
 CREATE TABLE IF NOT EXISTS settings (
     id INT PRIMARY KEY AUTO_INCREMENT,
     average_harvest_months INT NOT NULL DEFAULT 2 COMMENT 'Average duration in months from planting to harvest',
+    map_center_latitude DECIMAL(10, 8) NOT NULL DEFAULT 14.5995 COMMENT 'Map center latitude coordinate',
+    map_center_longitude DECIMAL(11, 8) NOT NULL DEFAULT 120.9842 COMMENT 'Map center longitude coordinate',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -61,7 +63,7 @@ CREATE TABLE IF NOT EXISTS polygon_coordinates (
 -- ============================================================
 
 -- Insert default settings
-INSERT INTO settings (average_harvest_months) VALUES (2);
+INSERT INTO settings (average_harvest_months, map_center_latitude, map_center_longitude) VALUES (2, 14.5995, 120.9842);
 
 -- ============================================================
 -- Sample Data (for testing purposes)
