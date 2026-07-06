@@ -25,22 +25,36 @@
 // Using __DIR__ (which is always {app_root}/config) is reliable regardless
 // of which page is currently being served, unlike SCRIPT_NAME which changes
 // per request and would produce wrong paths for pages in subdirectories.
-$appRoot = realpath(dirname(__DIR__));
-$documentRoot = realpath($_SERVER['DOCUMENT_ROOT']);
+$appRoot = dirname(__DIR__);
+$documentRoot = isset($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : '';
 
-// Normalize path separators (important on Windows)
+// Normalize path separators (important on Windows/Ubuntu)
 $appRoot = str_replace('\\', '/', $appRoot);
-$documentRoot = str_replace('\\', '/', $documentRoot);
+$documentRoot = str_replace('\\', '/', rtrim($documentRoot, '/\\'));
 
 // Calculate the base path relative to document root.
-// Fall back to SCRIPT_NAME-based detection if the app root is not under DOCUMENT_ROOT
-// (e.g. when accessed via symlinks or when DOCUMENT_ROOT is misconfigured).
+// First try raw paths (works for most setups without symlinks).
 if ($documentRoot !== '' && strpos($appRoot, $documentRoot) === 0) {
     $basePath = substr($appRoot, strlen($documentRoot));
 } else {
-    $scriptPath = dirname($_SERVER['SCRIPT_NAME']);
-    $scriptPath = str_replace('\\', '/', $scriptPath);
-    $basePath = ($scriptPath === '/') ? '' : $scriptPath;
+    // Try realpath to resolve symlinks and normalize paths (Windows, some Ubuntu setups).
+    $realAppRoot = realpath(dirname(__DIR__));
+    $realDocRoot = ($documentRoot !== '') ? realpath($documentRoot) : false;
+
+    if ($realAppRoot !== false && $realDocRoot !== false && $realDocRoot !== '') {
+        $realAppRootNorm = str_replace('\\', '/', $realAppRoot);
+        $realDocRootNorm = str_replace('\\', '/', $realDocRoot);
+        if (strpos($realAppRootNorm, $realDocRootNorm) === 0) {
+            $basePath = substr($realAppRootNorm, strlen($realDocRootNorm));
+        } else {
+            $basePath = '';
+        }
+    } else {
+        // Cannot reliably determine base path. Default to '' (app served from document root).
+        // This is the most common production deployment setup.
+        // If your app is in a subdirectory (e.g. /app), set BASE_URL manually below.
+        $basePath = '';
+    }
 }
 
 // Remove trailing slash if present

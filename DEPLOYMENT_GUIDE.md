@@ -119,7 +119,66 @@ define('DB_NAME', 'your_db_name');
 
 ---
 
+## Ubuntu Server Deployment
+
+### Steps for Ubuntu + Apache
+
+1. Install Apache and PHP:
+   ```bash
+   sudo apt update
+   sudo apt install apache2 php php-mysqli libapache2-mod-php mysql-server
+   ```
+
+2. Copy your files to the web root (choose one):
+   - **App at domain root:** copy to `/var/www/html/` (set `DocumentRoot /var/www/html`)
+   - **App in subdirectory:** copy to `/var/www/html/oyster/` (set `DocumentRoot /var/www/html`)
+
+3. Import the database:
+   ```bash
+   mysql -u root -p oyster_harvest_db < database/database.sql
+   ```
+   This is critical — it creates the `settings` table **and inserts the default row** with map coordinates.
+
+4. Update `config/database.php` with your Ubuntu MySQL credentials.
+
+5. Restart Apache:
+   ```bash
+   sudo systemctl restart apache2
+   ```
+
+6. After first login, go to **Settings** to configure your map center coordinates and zoom level.
+
+---
+
 ## Troubleshooting
+
+### Problem: Map Doesn't Load Satellite View / Wrong Center (Ubuntu)
+
+**Root cause:** On Ubuntu, the `DOCUMENT_ROOT` server variable may not be set correctly by PHP-FPM or certain Apache configurations. This caused the old auto-detection to use the current script's directory as the base URL (e.g., `/pages/dashboard`), which broke all AJAX calls including the settings fetch.
+
+**This is fixed in v2.1** — the auto-detection now falls back safely to `''` (document root) instead of using the incorrect script path.
+
+**If you are still seeing the issue after updating:**
+1. Open browser Developer Tools (F12) → Console tab
+2. Type `BASE_URL` and press Enter — verify it shows the correct value (empty string `""` for root, or `/oyster` if in a subdirectory)
+3. If it's wrong (e.g., `/pages/dashboard`), hard-code it in `config/config.php`:
+   ```php
+   // For app at document root:
+   define('BASE_URL', '');
+   // For app in subdirectory /oyster:
+   define('BASE_URL', '/oyster');
+   ```
+
+**Also check:** The `settings` table must have a row with your map coordinates. Run this in MySQL:
+```sql
+SELECT * FROM settings;
+```
+If empty, run:
+```sql
+INSERT INTO settings (average_harvest_months, map_center_latitude, map_center_longitude, map_default_zoom)
+VALUES (2, 14.5995, 120.9842, 15);
+```
+Then go to the **Settings** page to update the coordinates to your actual location.
 
 ### Problem: Assets (CSS/JS) Not Loading
 
@@ -129,7 +188,7 @@ define('DB_NAME', 'your_db_name');
 1. Check browser console for 404 errors
 2. Verify files exist in `assets/css/` and `assets/js/`
 3. Clear browser cache (Ctrl+Shift+Delete)
-4. The BASE_URL should auto-detect correctly
+4. Verify `BASE_URL` is correct (see above)
 
 ### Problem: AJAX Requests Failing
 
@@ -155,8 +214,8 @@ define('DB_NAME', 'your_db_name');
 **Solution:**
 1. The map now defaults to satellite view
 2. Use the layer control (top-right of map) to switch views
-3. Check internet connection (tiles load from external server)
-4. Map requires active internet connection
+3. Check internet connection — tiles load from Esri/OpenStreetMap CDN, the Ubuntu server must have outbound internet access
+4. If behind a firewall, ensure your **browser** can reach `server.arcgisonline.com` and `tile.openstreetmap.org` — map tiles are loaded client-side by the browser, not by the server
 
 ### Problem: Map Not Centered Correctly
 
@@ -287,5 +346,6 @@ If you encounter issues not covered in this guide:
 
 ## Version History
 
-- **v2.0** (Current) - Implemented dynamic base URL system with auto-detection
-- **v1.0** (Previous) - Hard-coded paths (only worked in root directory)
+- **v2.1** (Current) - Fixed BASE_URL fallback for Ubuntu/PHP-FPM deployments; added Ubuntu deployment guide
+- **v2.0** (Previous) - Implemented dynamic base URL system with auto-detection
+- **v1.0** - Hard-coded paths (only worked in root directory)
