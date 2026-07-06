@@ -155,6 +155,27 @@ body {
     margin: 1rem;
 }
 
+/* **************************************** */
+/* Smaller polygon drawing/editing handles */
+.leaflet-div-icon.leaflet-editing-icon {
+    width: 8px !important;
+    height: 8px !important;
+    margin-left: -4px !important;
+    margin-top: -4px !important;
+    border-radius: 50%;
+    border: 2px solid #0d6efd;
+    background: #ffffff;
+}
+
+/* Smaller middle handles while editing */
+.leaflet-touch .leaflet-div-icon.leaflet-editing-icon {
+    width: 10px !important;
+    height: 10px !important;
+    margin-left: -5px !important;
+    margin-top: -5px !important;
+}
+/* **************************************** */
+
 /* Buttons */
 .btn {
     font-weight: 500;
