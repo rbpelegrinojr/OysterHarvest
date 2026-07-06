@@ -21,9 +21,9 @@
     
     <!-- Custom JavaScript -->
     <?php if (isset($includeMapJS) && $includeMapJS): ?>
-    <script src="/assets/js/map.js"></script>
-    <script src="/assets/js/areas.js"></script>
-    <script src="/assets/js/dashboard.js"></script>
+    <script src="<?php echo asset('js/map.js'); ?>"></script>
+    <script src="<?php echo asset('js/areas.js'); ?>"></script>
+    <script src="<?php echo asset('js/dashboard.js'); ?>"></script>
     <?php endif; ?>
 </body>
 </html>
