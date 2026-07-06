@@ -19,10 +19,11 @@ if (!$conn) {
 // Update all statuses before fetching
 checkAndUpdateAllStatuses($conn);
 
-// Get all oyster areas
+// Get all oyster areas except harvested ones (harvested areas are hidden from the map)
 $areasQuery = "SELECT id, area_name, number_of_sacks, planting_datetime, harvest_datetime, 
                status, harvest_completed_at, created_at 
                FROM oyster_areas 
+               WHERE status != 'Harvested'
                ORDER BY created_at DESC";
 
 $result = $conn->query($areasQuery);
