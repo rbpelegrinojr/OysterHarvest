@@ -44,7 +44,7 @@ function deleteArea(areaId) {
     }
 
     $.ajax({
-        url: '/pages/areas/delete.php',
+        url: BASE_URL + '/pages/areas/delete.php',
         method: 'POST',
         data: { areaId: areaId },
         dataType: 'json',
@@ -71,7 +71,7 @@ function markAsHarvested(areaId) {
     }
 
     $.ajax({
-        url: '/pages/areas/mark_harvested.php',
+        url: BASE_URL + '/pages/areas/mark_harvested.php',
         method: 'POST',
         data: { areaId: areaId },
         dataType: 'json',
@@ -113,7 +113,7 @@ function saveArea() {
         return;
     }
 
-    const url = areaId ? '/pages/areas/edit.php' : '/pages/areas/create.php';
+    const url = areaId ? BASE_URL + '/pages/areas/edit.php' : BASE_URL + '/pages/areas/create.php';
     const data = {
         areaName: areaName,
         numberOfSacks: numberOfSacks,

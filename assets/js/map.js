@@ -16,7 +16,7 @@ let areas = [];
 function initializeMap() {
     // Fetch settings from the server to get map center coordinates
     $.ajax({
-        url: '/pages/settings/get_settings.php',
+        url: BASE_URL + '/pages/settings/get_settings.php',
         method: 'GET',
         dataType: 'json',
         success: function(response) {
@@ -59,14 +59,14 @@ function initializeMap() {
                 })
             ]);
 
-            // Add default layer (OpenStreetMap for localhost compatibility)
-            osmLayer.addTo(map);
+            // Add satellite layer as default (better for oyster farming visualization)
+            satelliteLayer.addTo(map);
 
             // Add layer control for switching between map types
             const baseLayers = {
-                "Street Map": osmLayer,
                 "Satellite": satelliteLayer,
-                "Hybrid (Satellite + Labels)": hybridLayer
+                "Hybrid (Satellite + Labels)": hybridLayer,
+                "Street Map": osmLayer
             };
 
             L.control.layers(baseLayers).addTo(map);
@@ -182,14 +182,14 @@ function initializeMapWithDefaults() {
         })
     ]);
 
-    // Add default layer (OpenStreetMap for localhost compatibility)
-    osmLayer.addTo(map);
+    // Add satellite layer as default (better for oyster farming visualization)
+    satelliteLayer.addTo(map);
 
     // Add layer control for switching between map types
     const baseLayers = {
-        "Street Map": osmLayer,
         "Satellite": satelliteLayer,
-        "Hybrid (Satellite + Labels)": hybridLayer
+        "Hybrid (Satellite + Labels)": hybridLayer,
+        "Street Map": osmLayer
     };
 
     L.control.layers(baseLayers).addTo(map);
@@ -289,7 +289,7 @@ function getStatusColor(status) {
  */
 function loadAreas() {
     $.ajax({
-        url: '/pages/areas/get_areas.php',
+        url: BASE_URL + '/pages/areas/get_areas.php',
         method: 'GET',
         dataType: 'json',
         success: function(response) {
@@ -417,7 +417,7 @@ function createPopupContent(area) {
  */
 function updateAreaCoordinates(areaId, coordinates) {
     $.ajax({
-        url: '/pages/areas/edit.php',
+        url: BASE_URL + '/pages/areas/edit.php',
         method: 'POST',
         data: {
             areaId: areaId,
