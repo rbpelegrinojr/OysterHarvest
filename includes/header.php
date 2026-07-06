@@ -52,19 +52,13 @@ if (!defined('BASE_URL')) {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) === 'index.php' && strpos($_SERVER['REQUEST_URI'], 'dashboard') !== false) ? 'active' : ''; ?>" href="<?php echo url('/pages/dashboard/index.php'); ?>">
-                            <i class="bi bi-speedometer2"></i> Dashboard
-                        </a>
+                        <a class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) === 'index.php' && strpos($_SERVER['REQUEST_URI'], 'dashboard') !== false) ? 'active' : ''; ?>" href="<?php echo url('/pages/dashboard/index.php'); ?>"><i class="bi bi-speedometer2"></i> Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], 'reports') !== false) ? 'active' : ''; ?>" href="<?php echo url('/pages/reports/index.php'); ?>">
-                            <i class="bi bi-file-earmark-text"></i> Reports
-                        </a>
+                        <a class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], 'reports') !== false) ? 'active' : ''; ?>" href="<?php echo url('/pages/reports/index.php'); ?>"><i class="bi bi-file-earmark-text"></i> Reports</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], 'settings') !== false) ? 'active' : ''; ?>" href="<?php echo url('/pages/settings/index.php'); ?>">
-                            <i class="bi bi-gear"></i> Settings
-                        </a>
+                        <a class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], 'settings') !== false) ? 'active' : ''; ?>" href="<?php echo url('/pages/settings/index.php'); ?>"><i class="bi bi-gear"></i> Settings</a>
                     </li>
                 </ul>
             </div>

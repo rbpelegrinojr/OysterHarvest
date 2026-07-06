@@ -160,7 +160,7 @@ include __DIR__ . '/../../includes/header.php';
                         <button type="submit" name="saveSettings" class="btn btn-primary">
                             <i class="bi bi-save"></i> Save Settings
                         </button>
-                        <a href="/pages/dashboard/index.php" class="btn btn-secondary">
+                        <a href="<?php echo url('/pages/dashboard/index.php'); ?>" class="btn btn-secondary">
                             <i class="bi bi-arrow-left"></i> Back to Dashboard
                         </a>
                     </form>
