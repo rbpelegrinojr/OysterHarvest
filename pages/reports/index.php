@@ -139,7 +139,7 @@ include __DIR__ . '/../../includes/header.php';
                     <button type="submit" class="btn btn-primary me-2">
                         <i class="bi bi-search"></i> Apply Filters
                     </button>
-                    <a href="/pages/reports/index.php" class="btn btn-secondary">
+                    <a href="<?php echo url('/pages/reports/index.php'); ?>" class="btn btn-secondary">
                         <i class="bi bi-x-circle"></i> Clear
                     </a>
                 </div>
