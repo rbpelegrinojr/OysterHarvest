@@ -10,6 +10,8 @@ let drawControl;
 let currentPolygonLayer = null;
 let areas = [];
 
+const DEFAULT_ZOOM = 15;
+
 /**
  * Initialize the Leaflet map
  */
@@ -22,7 +24,7 @@ function initializeMap() {
         success: function(response) {
             let centerLat = 14.5995;
             let centerLng = 120.9842;
-            let defaultZoom = 15;
+            let defaultZoom = DEFAULT_ZOOM;
             
             if (response.success && response.settings) {
                 // Use explicit null/undefined checks to allow 0 as valid coordinate
@@ -161,7 +163,7 @@ function initializeMap() {
  */
 function initializeMapWithDefaults() {
     // Create map centered on Manila Bay (Philippines) as fallback
-    map = L.map('map').setView([14.5995, 120.9842], 15);
+    map = L.map('map').setView([14.5995, 120.9842], DEFAULT_ZOOM);
 
     // Define base layers
     const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

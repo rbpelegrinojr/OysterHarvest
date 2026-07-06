@@ -137,4 +137,4 @@ INSERT INTO polygon_coordinates (area_id, latitude, longitude, sequence_number) 
 -- Migration: Add map_default_zoom column to existing databases
 -- Run this if upgrading from a previous version
 -- ============================================================
--- ALTER TABLE settings ADD COLUMN IF NOT EXISTS map_default_zoom INT NOT NULL DEFAULT 15 COMMENT 'Default zoom level when the map is loaded (1=world, 19=max)';
+-- ALTER TABLE settings ADD COLUMN map_default_zoom INT NOT NULL DEFAULT 15 COMMENT 'Default zoom level when the map is loaded (1=world, 19=max)';
