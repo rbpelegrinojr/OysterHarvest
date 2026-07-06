@@ -104,16 +104,16 @@ No configuration needed! The system auto-detects the subdirectory.
 Edit `config/database.php` and update these values:
 
 ```php
-// For localhost
+// For localhost (XAMPP development environment)
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_PASS', '');                    // ⚠️ Empty password - ONLY for development!
 define('DB_NAME', 'oyster_harvest_db');
 
-// For shared hosting
+// For shared hosting (PRODUCTION - use strong passwords!)
 define('DB_HOST', 'localhost');           // Or your hosting DB server
 define('DB_USER', 'your_db_username');
-define('DB_PASS', 'your_db_password');
+define('DB_PASS', 'your_db_password');    // ⚠️ Use a STRONG password in production!
 define('DB_NAME', 'your_db_name');
 ```
 

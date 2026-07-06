@@ -24,6 +24,11 @@
 // Auto-detect base URL based on the script location
 // This works for most standard setups
 $scriptPath = dirname($_SERVER['SCRIPT_NAME']);
+
+// Sanitize and validate the script path
+$scriptPath = str_replace('\\', '/', $scriptPath); // Normalize path separators
+$scriptPath = preg_replace('#/+#', '/', $scriptPath); // Remove multiple slashes
+
 $basePath = ($scriptPath === '/' || $scriptPath === '\\') ? '' : $scriptPath;
 
 // Remove trailing slash if present
@@ -57,15 +62,5 @@ function asset($path) {
     $path = ltrim($path, '/');
     
     return BASE_URL . '/assets/' . $path;
-}
-
-/**
- * Get the base URL for JavaScript usage
- * This can be output to JavaScript to make AJAX requests work properly
- * 
- * @return string Base URL
- */
-function getBaseUrl() {
-    return BASE_URL;
 }
 ?>

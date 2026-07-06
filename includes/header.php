@@ -36,7 +36,7 @@ if (!defined('BASE_URL')) {
     
     <!-- Base URL for JavaScript -->
     <script>
-        const BASE_URL = '<?php echo BASE_URL; ?>';
+        const BASE_URL = <?php echo json_encode(BASE_URL); ?>;
     </script>
 </head>
 <body>
