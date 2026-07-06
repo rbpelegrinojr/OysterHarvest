@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveSettings'])) {
     $averageHarvestMonths = isset($_POST['averageHarvestMonths']) ? (int)$_POST['averageHarvestMonths'] : 2;
     $mapCenterLatitude = isset($_POST['mapCenterLatitude']) ? (float)$_POST['mapCenterLatitude'] : 14.5995;
     $mapCenterLongitude = isset($_POST['mapCenterLongitude']) ? (float)$_POST['mapCenterLongitude'] : 120.9842;
+    $mapDefaultZoom = isset($_POST['mapDefaultZoom']) ? (int)$_POST['mapDefaultZoom'] : 15;
     
     if ($averageHarvestMonths < 1) {
         $message = 'Average harvest duration must be at least 1 month.';
@@ -35,11 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveSettings'])) {
     } elseif ($mapCenterLongitude < -180 || $mapCenterLongitude > 180) {
         $message = 'Longitude must be between -180 and 180.';
         $messageType = 'danger';
+    } elseif ($mapDefaultZoom < 1 || $mapDefaultZoom > 19) {
+        $message = 'Default zoom must be between 1 and 19.';
+        $messageType = 'danger';
     } else {
         // Update settings
-        $updateQuery = "UPDATE settings SET average_harvest_months = ?, map_center_latitude = ?, map_center_longitude = ? WHERE id = 1";
+        $updateQuery = "UPDATE settings SET average_harvest_months = ?, map_center_latitude = ?, map_center_longitude = ?, map_default_zoom = ? WHERE id = 1";
         $stmt = $conn->prepare($updateQuery);
-        $stmt->bind_param('idd', $averageHarvestMonths, $mapCenterLatitude, $mapCenterLongitude);
+        $stmt->bind_param('iddi', $averageHarvestMonths, $mapCenterLatitude, $mapCenterLongitude, $mapDefaultZoom);
         
         if ($stmt->execute()) {
             $message = 'Settings saved successfully!';
@@ -57,10 +61,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveSettings'])) {
 $currentSettings = [
     'average_harvest_months' => 2,
     'map_center_latitude' => 14.5995,
-    'map_center_longitude' => 120.9842
+    'map_center_longitude' => 120.9842,
+    'map_default_zoom' => 15
 ];
 
-$query = "SELECT average_harvest_months, map_center_latitude, map_center_longitude FROM settings ORDER BY id DESC LIMIT 1";
+$query = "SELECT average_harvest_months, map_center_latitude, map_center_longitude, map_default_zoom FROM settings ORDER BY id DESC LIMIT 1";
 $result = $conn->query($query);
 
 if ($result && $result->num_rows > 0) {
@@ -151,6 +156,23 @@ include __DIR__ . '/../../includes/header.php';
                             </div>
                         </div>
 
+                        <div class="mb-4">
+                            <label for="mapDefaultZoom" class="form-label">
+                                Map Default Zoom Level
+                            </label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="mapDefaultZoom" 
+                                   name="mapDefaultZoom" 
+                                   value="<?php echo $currentSettings['map_default_zoom']; ?>" 
+                                   min="1"
+                                   max="19"
+                                   required>
+                            <div class="form-text">
+                                How zoomed in the map is when first loaded (1 = world view, 15 = street level, 19 = maximum detail).
+                            </div>
+                        </div>
+
                         <div class="alert alert-info">
                             <i class="bi bi-info-circle"></i> 
                             <strong>Note:</strong> Changing this value will only affect newly created areas and edited areas. 
@@ -186,6 +208,12 @@ include __DIR__ . '/../../includes/header.php';
                     <p class="small text-muted">
                         Set the default center point of the map by providing latitude and longitude coordinates.
                         This determines where the map will be focused when you first load the dashboard.
+                    </p>
+
+                    <h6 class="mt-3">Map Default Zoom Level</h6>
+                    <p class="small text-muted">
+                        Controls how zoomed in the map is when it first loads. A higher value zooms in closer 
+                        (e.g., 15 shows street-level detail), while a lower value zooms out (e.g., 10 shows a wider area).
                     </p>
                     
                     <h6 class="mt-3">Automatic Calculations</h6>

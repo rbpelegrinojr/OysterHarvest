@@ -21,7 +21,7 @@ if (!$conn) {
 }
 
 // Get settings
-$query = "SELECT average_harvest_months, map_center_latitude, map_center_longitude FROM settings ORDER BY id DESC LIMIT 1";
+$query = "SELECT average_harvest_months, map_center_latitude, map_center_longitude, map_default_zoom FROM settings ORDER BY id DESC LIMIT 1";
 $result = $conn->query($query);
 
 if ($result && $result->num_rows > 0) {
@@ -38,7 +38,8 @@ if ($result && $result->num_rows > 0) {
         'settings' => [
             'average_harvest_months' => 2,
             'map_center_latitude' => 14.5995,
-            'map_center_longitude' => 120.9842
+            'map_center_longitude' => 120.9842,
+            'map_default_zoom' => 15
         ]
     ]);
 }

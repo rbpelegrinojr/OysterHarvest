@@ -10,6 +10,8 @@ let drawControl;
 let currentPolygonLayer = null;
 let areas = [];
 
+const DEFAULT_ZOOM = 15;
+
 /**
  * Initialize the Leaflet map
  */
@@ -22,6 +24,7 @@ function initializeMap() {
         success: function(response) {
             let centerLat = 14.5995;
             let centerLng = 120.9842;
+            let defaultZoom = DEFAULT_ZOOM;
             
             if (response.success && response.settings) {
                 // Use explicit null/undefined checks to allow 0 as valid coordinate
@@ -31,10 +34,13 @@ function initializeMap() {
                 if (response.settings.map_center_longitude !== null && response.settings.map_center_longitude !== undefined) {
                     centerLng = parseFloat(response.settings.map_center_longitude);
                 }
+                if (response.settings.map_default_zoom !== null && response.settings.map_default_zoom !== undefined) {
+                    defaultZoom = parseInt(response.settings.map_default_zoom);
+                }
             }
             
             // Create map centered on configured coordinates
-            map = L.map('map').setView([centerLat, centerLng], 13);
+            map = L.map('map').setView([centerLat, centerLng], defaultZoom);
 
             // Define base layers
             const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -59,8 +65,8 @@ function initializeMap() {
                 })
             ]);
 
-            // Add satellite layer as default (better for oyster farming visualization)
-            satelliteLayer.addTo(map);
+            // Add hybrid layer as default (satellite imagery with labels)
+            hybridLayer.addTo(map);
 
             // Add layer control for switching between map types
             const baseLayers = {
@@ -157,7 +163,7 @@ function initializeMap() {
  */
 function initializeMapWithDefaults() {
     // Create map centered on Manila Bay (Philippines) as fallback
-    map = L.map('map').setView([14.5995, 120.9842], 13);
+    map = L.map('map').setView([14.5995, 120.9842], DEFAULT_ZOOM);
 
     // Define base layers
     const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -182,8 +188,8 @@ function initializeMapWithDefaults() {
         })
     ]);
 
-    // Add satellite layer as default (better for oyster farming visualization)
-    satelliteLayer.addTo(map);
+    // Add hybrid layer as default (satellite imagery with labels)
+    hybridLayer.addTo(map);
 
     // Add layer control for switching between map types
     const baseLayers = {

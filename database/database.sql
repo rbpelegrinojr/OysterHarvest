@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS settings (
     average_harvest_months INT NOT NULL DEFAULT 2 COMMENT 'Average duration in months from planting to harvest',
     map_center_latitude DECIMAL(10, 8) NOT NULL DEFAULT 14.5995 COMMENT 'Map center latitude coordinate',
     map_center_longitude DECIMAL(11, 8) NOT NULL DEFAULT 120.9842 COMMENT 'Map center longitude coordinate',
+    map_default_zoom INT NOT NULL DEFAULT 15 COMMENT 'Default zoom level when the map is loaded (1=world, 19=max)',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -63,7 +64,7 @@ CREATE TABLE IF NOT EXISTS polygon_coordinates (
 -- ============================================================
 
 -- Insert default settings
-INSERT INTO settings (average_harvest_months, map_center_latitude, map_center_longitude) VALUES (2, 14.5995, 120.9842);
+INSERT INTO settings (average_harvest_months, map_center_latitude, map_center_longitude, map_default_zoom) VALUES (2, 14.5995, 120.9842, 15);
 
 -- ============================================================
 -- Sample Data (for testing purposes)
@@ -131,3 +132,9 @@ INSERT INTO polygon_coordinates (area_id, latitude, longitude, sequence_number) 
 -- ============================================================
 -- Database Schema Complete
 -- ============================================================
+
+-- ============================================================
+-- Migration: Add map_default_zoom column to existing databases
+-- Run this if upgrading from a previous version
+-- ============================================================
+-- ALTER TABLE settings ADD COLUMN map_default_zoom INT NOT NULL DEFAULT 15 COMMENT 'Default zoom level when the map is loaded (1=world, 19=max)';
