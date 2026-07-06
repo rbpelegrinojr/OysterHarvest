@@ -21,18 +21,30 @@
  *   define('BASE_URL', '');
  */
 
-// Auto-detect base URL based on the script location
-// This works for most standard setups
-$scriptPath = dirname($_SERVER['SCRIPT_NAME']);
+// Auto-detect base URL based on the application root directory.
+// Using __DIR__ (which is always {app_root}/config) is reliable regardless
+// of which page is currently being served, unlike SCRIPT_NAME which changes
+// per request and would produce wrong paths for pages in subdirectories.
+$appRoot = realpath(dirname(__DIR__));
+$documentRoot = realpath($_SERVER['DOCUMENT_ROOT']);
 
-// Sanitize and validate the script path
-$scriptPath = str_replace('\\', '/', $scriptPath); // Normalize path separators
-$scriptPath = preg_replace('#/+#', '/', $scriptPath); // Remove multiple slashes
+// Normalize path separators (important on Windows)
+$appRoot = str_replace('\\', '/', $appRoot);
+$documentRoot = str_replace('\\', '/', $documentRoot);
 
-$basePath = ($scriptPath === '/' || $scriptPath === '\\') ? '' : $scriptPath;
+// Calculate the base path relative to document root.
+// Fall back to SCRIPT_NAME-based detection if the app root is not under DOCUMENT_ROOT
+// (e.g. when accessed via symlinks or when DOCUMENT_ROOT is misconfigured).
+if ($documentRoot !== '' && strpos($appRoot, $documentRoot) === 0) {
+    $basePath = substr($appRoot, strlen($documentRoot));
+} else {
+    $scriptPath = dirname($_SERVER['SCRIPT_NAME']);
+    $scriptPath = str_replace('\\', '/', $scriptPath);
+    $basePath = ($scriptPath === '/') ? '' : $scriptPath;
+}
 
 // Remove trailing slash if present
-$basePath = rtrim($basePath, '/\\');
+$basePath = rtrim($basePath, '/');
 
 define('BASE_URL', $basePath);
 
