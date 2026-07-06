@@ -32,9 +32,16 @@ $documentRoot = realpath($_SERVER['DOCUMENT_ROOT']);
 $appRoot = str_replace('\\', '/', $appRoot);
 $documentRoot = str_replace('\\', '/', $documentRoot);
 
-// Calculate the base path relative to document root
-$basePath = str_replace($documentRoot, '', $appRoot);
-$basePath = str_replace('\\', '/', $basePath);
+// Calculate the base path relative to document root.
+// Fall back to SCRIPT_NAME-based detection if the app root is not under DOCUMENT_ROOT
+// (e.g. when accessed via symlinks or when DOCUMENT_ROOT is misconfigured).
+if ($documentRoot !== '' && strpos($appRoot, $documentRoot) === 0) {
+    $basePath = substr($appRoot, strlen($documentRoot));
+} else {
+    $scriptPath = dirname($_SERVER['SCRIPT_NAME']);
+    $scriptPath = str_replace('\\', '/', $scriptPath);
+    $basePath = ($scriptPath === '/') ? '' : $scriptPath;
+}
 
 // Remove trailing slash if present
 $basePath = rtrim($basePath, '/');
